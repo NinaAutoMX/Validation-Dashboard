@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Repair Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="https://copilot.microsoft.com/th/id/BCO.5f34131a-d4f6-472e-94d0-cdd1c38d89f0.png">
   <style>
  body {
   font-family: 'Segoe UI', Arial, sans-serif;
@@ -107,7 +109,7 @@ input, textarea {
 
 textarea {
   min-height: 80px;
-  resize: vertical;
+  resize: both;
 }
 
 .disclaimer-grid {
@@ -170,10 +172,24 @@ button:hover {
 </head>
 <body>
 <div class="section">
-  <h2>Repair Dashboard</h2>
+  <h2>
+  <img src="assets/dashboard-icon.png" alt="Dashboard Icon"
+       style="height: 24px; vertical-align: middle; margin-right: 8px;">
+  Repair Dashboard
+</h2>
+<p id="current-date" style="font-weight: 500; margin-bottom: 10px;"></p>
   <div class="input-grid">
 
 <!-- Singles with Approved Brand Subfields -->
+    <div class="input-full">
+  <div class="input-group">
+    <label>
+      <input type="checkbox" id="dataSubmittedCheck"> Data Last Submitted:
+    </label>
+    <input type="text" id="dataSubmittedText" placeholder="e.g. 02/09/2025" style="margin-left: 10px;">
+  </div>
+</div>
+
 <div class="input-full">
   <div class="input-group">
     <label for="activeRepairs">Active Repairs:</label>
@@ -205,6 +221,10 @@ button:hover {
     <label for="approved2024">➡️ Approved Brand – 2024:</label>
     <input type="number" id="approved2024" placeholder="e.g. 30">
   </div>
+  <div class="input-group" style="margin-left: 20px;">
+    <label for="exclusive2024">➡️ 2024 Repairs (Excl. Earlier):</label>
+    <input type="number" id="exclusive2024" placeholder="e.g. 18">
+  </div>
 </div>
 
     <div class="input-group">
@@ -230,22 +250,12 @@ button:hover {
 </label>
 <label>
   TSP
-  <input type="number" id="tsp" value="0" min="0" />
+  <input type="number" id="tsp" placeholder="e.g. 1234567.89" min="0" />
 </label>
 <label>
   Invalid jobs
   <input type="number" id="invalidJobs" value="0" min="0" />
 </label>
-
-    <div class="input-group">
-      <label for="allVehicleRepairs">Total Repairs for All Vehicles:</label>
-      <input type="number" id="allVehicleRepairs">
-    </div>
-
-    <div class="input-group">
-      <label for="totalRepairs">Total Repairs:</label>
-      <input type="number" id="totalRepairs">
-    </div>
 
 <div class="input-full">
   <div class="input-group">
@@ -279,6 +289,9 @@ button:hover {
   <input type="text" id="aggregateTextBrands" placeholder="e.g. Ford, Hyundai, Mahindra">
 </div>
 
+<!-- 3.1 Insurer Text -->    
+<label><input type="checkbox" id="chkInsurerName"> Not submiting Insurer Name</label>
+<div class="input-group" style="margin-left: 20px;">
 
     <!-- Paired rows: Missing + Active -->
     <div class="input-pair">
@@ -418,6 +431,11 @@ button:hover {
   <textarea id="fordDisclaimer"></textarea>
   </fieldset>
       <fieldset>
+  <legend>GWM & Haval 19/08/2025</legend>
+  <label><input type="checkbox" id="gwmhavalDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+  <textarea id="gwmhavalDisclaimer"></textarea>
+</fieldset>
+      <fieldset>
   <legend>Honda 17/01/2025</legend>
   <label><input type="checkbox" id="hondaDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
   <textarea id="hondaDisclaimer"></textarea>
@@ -459,6 +477,15 @@ button:hover {
   <textarea id="additionalNotes" placeholder="Any extra context or observations..."></textarea>
 </div>
 
+  <div class="input-full">
+  <label style="margin-right: 10px;">Created By:</label>
+  <label style="margin-right: 15px;">
+    <input type="checkbox" name="creator" value="NH" onclick="toggleExclusive(this)"> (NH)
+  </label>
+  <label>
+    <input type="checkbox" name="creator" value="JW" onclick="toggleExclusive(this)"> (JW)
+  </label>
+</div>
 
     <button onclick="generateReport()">Generate Report</button>
   </div>
@@ -468,21 +495,30 @@ button:hover {
   </div>
 
 <script>
-
+  function flagIfLow(value, total, label) {
+  const ratio = total > 0 ? value / total : 0;
+  const formatted = `${value}/${total} ${label}`;
+  return ratio <= 0.05
+    ? `<span style="color: #c0392b; font-weight: bold;">${formatted}</span>`
+    : formatted;
+}
   function generateReport() {
-    const activeRepairs    = +document.getElementById('activeRepairs').value;
+    const today              = new Date().toLocaleDateString("en-ZA");
+    const activeRepairs      = +document.getElementById('activeRepairs').value;
     const completed2025      = +document.getElementById('completed2025').value;
     const completed2024      = +document.getElementById('completed2024').value;
-    const completed2023     = +document.getElementById('completed2023').value;
-    const completed2022     = +document.getElementById('completed2022').value;
-    const totalRepairs      = +document.getElementById('totalRepairs').value;
-    const allVehicleRepairs = +document.getElementById('allVehicleRepairs').value;
-    const openLong          = +document.getElementById('openLong').value;
+    const completed2023      = +document.getElementById('completed2023').value;
+    const completed2022      = +document.getElementById('completed2022').value;
+    const openLong           = +document.getElementById('openLong').value;
 
     const writeOffs         = +document.getElementById('writeOffs').value;
     const pp2025            = +document.getElementById('pp2025').value;
     const pp2024            = +document.getElementById('pp2024').value;
-    const tsp = +document.getElementById('tsp').value;
+    const tspRaw = +document.getElementById('tsp').value || 0;
+    const tspFormatted = 'R ' + tspRaw.toLocaleString("en-ZA", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+    }).replace(/,/g, ' ');
     const invalidJobs       = +document.getElementById('invalidJobs').value;
     const writeOffsUnder40k = +document.getElementById('writeOffsUnder40k').value;
 
@@ -491,7 +527,8 @@ button:hover {
     const chkAggregateText     = document.getElementById('chkAggregateText').checked;
     const aggregateTextBrands  = document.getElementById('aggregateTextBrands').value.trim();
     const aggregateMakeOptions = Array.from(document.querySelectorAll('input[name="aggregateMakeOption"]:checked')).map(cb => cb.value);
-    const makeClause = aggregateMakeOptions.length ? ` (${aggregateMakeOptions.join(' & ')})` : '';
+    const makeClause           = aggregateMakeOptions.length ? ` (${aggregateMakeOptions.join(' & ')})` : '';
+    const chkInsurerName = document.getElementById('chkInsurerName').checked;
 
     const missstart         = +document.getElementById('missstart').value;
     const missStartActive   = +document.getElementById('missStartActive').value;
@@ -525,6 +562,8 @@ button:hover {
     const approved2025 = +document.getElementById('approved2025').value;
     const approved2024 = +document.getElementById('approved2024').value;
     const completedTotal = approved2025 + approved2024;
+    const repairTotal = approved2025 + approved2024 + approvedActive;
+    const allTotal = completed2025 + exclusive2024 + activeRepairs;
     const summaryParts = [];
 
 
@@ -545,12 +584,15 @@ pp2025Jobs = lines.map(line => {
   return { jobId, brand, date };
 }).filter(Boolean);
 
+  const creator = document.querySelector('input[name="creator"]:checked')?.value || '';
 
-    summaryParts.push(
-      ` – Active(${activeRepairs}); Completed 2022(${completed2022}), 2023(${completed2023}), 2024(${completed2024}), 2025(${completed2025}); ` +
-      `Write-offs(${writeOffs}). PP 2024(${pp2024}/${completed2024}) & PP 2025(${pp2025}/${completed2025}); ` +
-      `TSP(R ${tsp.toFixed(2)}). Invalid Jobs(${invalidJobs}).`
-    );
+
+summaryParts.push(
+  `${today} – Active(${activeRepairs}); Completed 2022(${completed2022}), 2023(${completed2023}), 2024(${completed2024}), 2025(${completed2025}); ` +
+  `Write-offs(${writeOffs}). PP 2024(${pp2024}/${completed2024}) & PP 2025(${pp2025}/${completed2025}); ` +
+  `TSP(${tspFormatted}). Invalid Jobs(${invalidJobs}).`
+);
+
 if (openLong) {
   const openLongApproved = +document.getElementById('openLongApproved').value;
   summaryParts.push(`There are ${openLong}/${activeRepairs} repairs that have been open for more than 100 days (${openLongApproved}/${openLong} are for approved brands).`);
@@ -564,6 +606,10 @@ if (chkFullBrandData) {
 }
 if (chkAggregateText && aggregateTextBrands) {
   summaryParts.push(`There are some (${aggregateTextBrands}) repairs where we are receiving aggregate data.`);
+
+}
+    if (chkInsurerName) {
+  summaryParts.push("They are not submitting Insurer name.");
 }
 
     if (writeOffsUnder40k) {
@@ -572,50 +618,50 @@ if (chkAggregateText && aggregateTextBrands) {
 
     const dateErrors = [];
 
-    if (missstart) dateErrors.push(`${missstart}/${totalRepairs} missing start date (${missStartActive} still active)`);
-    if (compldatemiss) dateErrors.push(`${compldatemiss}/${totalRepairs} missing completion date (${complDateActive} still active)`);
-    if (make) dateErrors.push(`${make}/${totalRepairs} missing make (${makeActive} still active)`);
+    if (missstart) dateErrors.push(`${flagIfLow(missstart, repairTotal, "missing start date")} (${missStartActive} still active)`);
+if (compldatemiss) dateErrors.push(`${flagIfLow(compldatemiss, repairTotal, "missing completion date")} (${complDateActive} still active)`);
+if (make) dateErrors.push(`${flagIfLow(make, repairTotal, "missing make")} (${makeActive} still active)`);
+if (validModel) {
+  const selectedModels = Array.from(document.querySelectorAll('input[name="validModels"]:checked')).map(cb => cb.value);
+  const includeClause = selectedModels.length ? ' (including ' + selectedModels.join(', ').replace(/, ([^,]*)$/, ' & $1') + ')' : '';
+  dateErrors.push(`${flagIfLow(validModel, repairTotal, "have invalid model")}${includeClause}`);
+}
+if (hasRegno) dateErrors.push(`${flagIfLow(hasRegno, repairTotal, "missing registration no")} (${regnoActive} still active)`);
+if (missingVIN) dateErrors.push(`${flagIfLow(missingVIN, repairTotal, "missing VIN")} (${vinActive} still active)`);
+if (missReg) dateErrors.push(`${flagIfLow(missReg, repairTotal, "missing year of reg")} (${missRegActive} still active, ${missRegUnknown} unknown warranty)`);
+if (mileage) dateErrors.push(`${flagIfLow(mileage, repairTotal, "missing mileage")} (${mileageActive} still active)`);
+if (ownerName) dateErrors.push(`${flagIfLow(ownerName, repairTotal, "missing owner name")} (${ownerNameActive} still active)`);
+if (ownerTel) dateErrors.push(`${flagIfLow(ownerTel, repairTotal, "missing owner telephone")} (${ownerTelActive} still active)`);
+if (fullQuote) dateErrors.push(`${flagIfLow(fullQuote, repairTotal, "missing full quote details")} (${fullQuoteActive} still active)`);
 
-    if (validModel) {
-      const selectedModels = Array.from(document.querySelectorAll('input[name="validModels"]:checked')).map(cb => cb.value);
-      const includeClause = selectedModels.length ? ' (including ' + selectedModels.join(', ').replace(/, ([^,]*)$/, ' & $1') + ')' : '';
-      dateErrors.push(`${validModel}/${totalRepairs} missing valid model${includeClause}`);
-    }
-
-    if (hasRegno) dateErrors.push(`${hasRegno}/${totalRepairs} missing registration no (${regnoActive} still active)`);
-    if (missingVIN) dateErrors.push(`${missingVIN}/${totalRepairs} missing VIN (${vinActive} still active)`);
-    if (missReg) dateErrors.push(`${missReg}/${totalRepairs} missing year of reg (${missRegActive} still active, ${missRegUnknown} unknown warranty)`);
-    if (mileage) dateErrors.push(`${mileage}/${totalRepairs} missing mileage (${mileageActive} still active)`);
-    if (ownerName) dateErrors.push(`${ownerName}/${totalRepairs} missing owner name (${ownerNameActive} still active)`);
-    if (ownerTel) dateErrors.push(`${ownerTel}/${totalRepairs} missing owner telephone (${ownerTelActive} still active)`);
-    if (fullQuote) dateErrors.push(`${fullQuote}/${totalRepairs} missing full quote details (${fullQuoteActive} still active)`);
 
     if (dateErrors.length) {
       summaryParts.push(dateErrors.join('; ') + '.');
     }
 
-    if (partDescription || missingSupplier) {
-      summaryParts.push(
-        `${partDescription}/${completedTotal} completed repairs missing part description & ` +
-        `${missingSupplier}/${completedTotal} missing supplier name.`
-      );
-    }
+   if (partDescription) {
+  summaryParts.push(`${flagIfLow(partDescription, completedTotal, "completed repairs missing part description")}.`);
+}
+
+if (missingSupplier) {
+  summaryParts.push(`${flagIfLow(missingSupplier, completedTotal, "missing supplier name")}.`);
+}
 
     const totalPartFlags = partDescription + missingSupplier;
-    if (spotSample > 0) {
-      const proportion = flaggedParts / spotSample;
-      let estimateFlagged = Math.round(proportion * totalPartFlags);
-      estimateFlagged = Math.min(estimateFlagged, totalPartFlags);
+   if (spotSample > 0) {
+  const proportion = flaggedParts / spotSample;
+  let estimateFlagged = Math.round(proportion * totalPartFlags);
+  estimateFlagged = Math.min(estimateFlagged, totalPartFlags);
 
-      summaryParts.push(
-        `I spot-checked ${spotSample} repairs and ${flaggedParts}/${spotSample} have been flagged for parts; ` +
-        `therefore it is likely that ${estimateFlagged}/${totalPartFlags} are flagged for parts.`
-      );
-    }
+  summaryParts.push(
+    `I spot-checked ${spotSample} repairs and ${flaggedParts}/${spotSample} have been flagged for parts; ` +
+    `therefore it is likely that ${estimateFlagged}/${totalPartFlags} are flagged for parts.`
+  );
+}
 
-    if (ppp) {
-      summaryParts.push(`${ppp}/${allVehicleRepairs} total repairs missing part purchase price.`);
-    }
+   if (ppp) {
+  summaryParts.push(`${flagIfLow(ppp, allTotal, "total repairs missing part purchase price")}.`);
+}
 
 if (ppSpotCheckJobs.length > 0) {
   const spotCheckTotal = 10;
@@ -626,7 +672,7 @@ if (ppSpotCheckJobs.length > 0) {
     .map(job => `${job.jobId} - ${job.brand} - ${job.date}`);
 
   summaryParts.push(
-    `I spot-checked ${spotCheckTotal} High Value In-Warranty repairs with R0.00 and found ${flaggedManual} repairs that are missing Part Number/Part Description/Supplier Name or Part Purchase Price. ` +
+    `I spot-checked ${spotCheckTotal} High Value In-Warranty repairs with R0.00 and found ${flaggedManual} repairs where we are receiving Part Description/Job Card Price and/or Part Number. ` +
     `Jobs affected: ${ppSpotCheckDetails.join(', ')}.`
   );
 }
@@ -635,11 +681,12 @@ let html = `<p>${summaryParts.join(' ')}</p>`;
 
 const disclaimerBrands = [];
 
-['ford','honda','hyundai','isuzu','jac','mahindra','mitsubishi','suzuki'].forEach(lbl => {
-  const txt = document.getElementById(lbl + 'Disclaimer')?.value.trim();
-  const checkbox = document.getElementById(lbl + 'DisclaimerCheck');
+['ford', 'GWM & Haval', 'honda', 'hyundai', 'isuzu', 'jac', 'mahindra', 'mitsubishi', 'suzuki'].forEach(lbl => {
+  const idPrefix = lbl.replace(/[^a-zA-Z0-9]/g, '').toLowerCase(); // e.g. 'GWM/Haval' → 'gwmhaval'
+  const txt = document.getElementById(idPrefix + 'Disclaimer')?.value.trim();
+  const checkbox = document.getElementById(idPrefix + 'DisclaimerCheck');
   const checked = checkbox ? checkbox.checked : false;
-  const title = lbl.charAt(0).toUpperCase() + lbl.slice(1);
+  const title = lbl.replace(/\b\w/g, c => c.toUpperCase());
 
   // Only skip if the field is truly empty
   if (txt) {
@@ -664,8 +711,16 @@ if (additionalNotes) {
   html += `<p><strong>Additional Notes:</strong> ${additionalNotes}</p>`;
 }
 
-summaryParts.push(`Additional Notes: ${additionalNotes}`);
+if (additionalNotes) {
+  summaryParts.push(`Additional Notes: ${additionalNotes}`);
+}
 
+    if (creator) {
+  summaryParts.push(`Report created by: ${creator}`);
+}
+    if (creator) {
+  html += `<p><strong>Report created by:</strong> ${creator}</p>`;
+}
 
 document.getElementById('reportText').innerHTML = html;
   }
@@ -673,3 +728,4 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
