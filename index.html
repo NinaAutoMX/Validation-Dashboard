@@ -190,6 +190,10 @@
 
     <!-- Section: Repair Totals -->
     <h3 class="section-title">Repair Totals</h3>
+  <div class="input-group">
+  <label><input type="checkbox" id="chkLastSubmitted"> Data last submitted:</label>
+  <input type="date" id="lastSubmittedDate">
+</div>
     <div class="input-grid">
       <div class="input-pair">
         <label for="activeRepairs">Active Repairs:</label>
@@ -467,7 +471,16 @@
     : formatted;
 }
   function generateReport() {
+  
     const today              = new Date().toLocaleDateString("en-ZA");
+    let submissionText = '';
+const showLastSubmitted = document.getElementById('chkLastSubmitted').checked;
+const lastSubmittedDate = document.getElementById('lastSubmittedDate').value;
+
+if (showLastSubmitted && lastSubmittedDate) {
+  const formattedDate = new Date(lastSubmittedDate).toLocaleDateString("en-ZA");
+  submissionText = ` - Data last submitted ${formattedDate}`;
+}
     const completed2023      = +document.getElementById('completed2023').value;
     const completed2022      = +document.getElementById('completed2022').value;
     const openLong           = +document.getElementById('openLong').value;
@@ -528,9 +541,9 @@
     const exclusive2024 = +document.getElementById('exclusive2024').value;
     const activeRepairs = +document.getElementById('activeRepairs').value;
 
-    const completedTotal = completed2025 + completed2024;
+    const completedTotal = approved2025 + approved2024;
     const repairTotal = approved2025 + approved2024 + approvedActive;
-    const allTotal = approved2025 + exclusive2024 + activeRepairs;
+    const allTotal = completed2025 + exclusive2024 + activeRepairs;
     const summaryParts = [];
 
 
@@ -555,7 +568,7 @@ pp2025Jobs = lines.map(line => {
 
 
 summaryParts.push(
-  `${today} – Active(${activeRepairs}); Completed 2022(${completed2022}), 2023(${completed2023}), 2024(${completed2024}), 2025(${completed2025}); ` +
+  `${today}${submissionText} - Active (${activeRepairs}); Completed 2022(${completed2022}), 2023(${completed2023}), 2024(${completed2024}), 2025(${completed2025}); ` +
   `Write-offs(${writeOffs}). PP 2024(${pp2024}/${completed2024}) & PP 2025(${pp2025}/${completed2025}); ` +
   `TSP(${tspFormatted}). Invalid Jobs(${invalidJobs}).`
 );
@@ -682,11 +695,9 @@ if (additionalNotes) {
   summaryParts.push(`Additional Notes: ${additionalNotes}`);
 }
 
-    if (creator) {
-  summaryParts.push(`Report created by: ${creator}`);
-}
-    if (creator) {
-  html += `<p><strong>Report created by:</strong> ${creator}</p>`;
+
+ if (creator) {
+  html += `<p><strong>${creator}</strong></p>`;
 }
 
 document.getElementById('reportText').innerHTML = html;
@@ -695,4 +706,5 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
 
