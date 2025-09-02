@@ -6,8 +6,8 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/png" href="https://copilot.microsoft.com/th/id/BCO.5f34131a-d4f6-472e-94d0-cdd1c38d89f0.png">
   <style>
- body {
-  font-family: 'Segoe UI', Arial, sans-serif;
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
   color: #1a1a1a;
   background: url('https://wallpapercave.com/wp/wp11509738.jpg') center/cover fixed;
   max-width: 1200px;
@@ -37,6 +37,14 @@ h2, h3 {
   margin-bottom: 20px;
 }
 
+.section-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #4e125f;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
 /* ——— Simplified Input Layout ——— */
 
 .input-grid {
@@ -46,11 +54,11 @@ h2, h3 {
   margin-bottom: 30px;
 }
 
-/* Single fields (e.g. Active Repairs, PPP) */
+/* Single fields */
 .input-group {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 12px 16px;
+  grid-template-columns: 160px 1fr;
+  gap: 10px 14px;
   align-items: center;
 }
 .input-group label {
@@ -63,11 +71,11 @@ h2, h3 {
   box-sizing: border-box;
 }
 
-/* Paired fields in one row */
+/* Paired fields */
 .input-pair {
   display: grid;
-  grid-template-columns: 180px 1fr 180px 1fr;
-  gap: 12px 16px;
+  grid-template-columns: 160px 1fr 160px 1fr;
+  gap: 10px 14px;
   align-items: center;
 }
 .input-pair label {
@@ -79,7 +87,7 @@ h2, h3 {
   box-sizing: border-box;
 }
 
-/* Full-width rows (e.g. model + checkboxes) */
+/* Full-width rows */
 .input-full {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -109,6 +117,11 @@ input, textarea {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: rgba(255,255,255,0.85);
+  transition: border-color 0.2s ease;
+}
+input:hover,
+textarea:hover {
+  border-color: #6a1a7f;
 }
 
 textarea {
@@ -191,7 +204,6 @@ button:hover {
     align-items: flex-start;
   }
 }
-
   </style>
 </head>
 <body>
@@ -752,5 +764,6 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
 
 
