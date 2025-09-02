@@ -468,9 +468,6 @@
 }
   function generateReport() {
     const today              = new Date().toLocaleDateString("en-ZA");
-    const activeRepairs      = +document.getElementById('activeRepairs').value;
-    const completed2025      = +document.getElementById('completed2025').value;
-    const completed2024      = +document.getElementById('completed2024').value;
     const completed2023      = +document.getElementById('completed2023').value;
     const completed2022      = +document.getElementById('completed2022').value;
     const openLong           = +document.getElementById('openLong').value;
@@ -698,3 +695,4 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
