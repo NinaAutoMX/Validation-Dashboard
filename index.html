@@ -525,10 +525,15 @@
 
     const approved2025 = +document.getElementById('approved2025').value;
     const approved2024 = +document.getElementById('approved2024').value;
+    const approvedActive = +document.getElementById('approvedActive').value;
+    const completed2025 = +document.getElementById('completed2025').value;
+    const completed2024 = +document.getElementById('completed2024').value;
     const exclusive2024 = +document.getElementById('exclusive2024').value;
-    const completedTotal = approved2025 + approved2024;
+    const activeRepairs = +document.getElementById('activeRepairs').value;
+
+    const completedTotal = completed2025 + completed2024;
     const repairTotal = approved2025 + approved2024 + approvedActive;
-    const allTotal = completed2025 + exclusive2024 + activeRepairs;
+    const allTotal = approved2025 + exclusive2024 + activeRepairs;
     const summaryParts = [];
 
 
@@ -693,10 +698,3 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
-
-
-
-
-
-
-
