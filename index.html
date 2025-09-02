@@ -24,12 +24,13 @@
     }
 
     .section {
-      background-color: rgba(255,255,255,0.95);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 40px;
-    }
+  background-color: rgba(255,255,255,0.95);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+  border: 1px solid #ccc; /* 👈 Add this line */
+}
 
     h2, h3 {
       color: #4e125f;
@@ -183,11 +184,7 @@
 </head>
 <body>
   <div class="section">
-    <h2>
-      <img src="assets/dashboard-icon.png" alt="Dashboard Icon"
-           style="height: 24px; vertical-align: middle; margin-right: 8px;">
-      Repair Dashboard
-    </h2>
+    <h2>Repair Dashboard</h2>
     <p id="current-date" style="font-weight: 500; margin-bottom: 10px;"></p>
   </div>
 
@@ -241,6 +238,16 @@
         <input type="number" id="invalidJobs">
       </div>
         </div>
+          <div class="input-full">
+  <div class="input-group">
+    <label for="openLong">Open >100 Days:</label>
+    <input type="number" id="openLong" placeholder="e.g. 186">
+  </div>
+  <div class="input-group" style="margin-left: 20px;">
+    <label for="openLongApproved">- Approved Brand – Open >100 Days:</label>
+    <input type="number" id="openLongApproved" placeholder="e.g. 20">
+  </div>
+</div>
     <!-- Section: Aggregate Flags -->
     <h3 class="section-title">Aggregate Data Submission</h3>
     <div class="input-grid">
@@ -260,7 +267,25 @@
 
     <!-- Section: Missing Field Summary -->
 <h3 class="section-title">Missing Field Summary</h3>
-<div class="input-grid">
+  <div class="input-pair">
+    <label for="missstart">Missing Start Date:</label>
+    <input type="number" id="missstart">
+    <label for="missStartActive">Active:</label>
+    <input type="number" id="missStartActive">
+  </div>
+    <div class="input-pair">
+    <label for="compldatemiss">Missing Compl. Date:</label>
+    <input type="number" id="compldatemiss">
+    <label for="complDateActive">Active:</label>
+    <input type="number" id="complDateActive">
+  </div>
+  <div class="input-pair">
+    <label for="make">Missing Make:</label>
+    <input type="number" id="make">
+    <label for="makeActive">Active:</label>
+    <input type="number" id="makeActive">
+  </div>
+      <div class="input-grid">
   <div class="input-full">
     <div class="input-group">
       <label for="validModel">Missing Valid Model:</label>
@@ -275,7 +300,8 @@
     </div>
   </div>
 
-  <div class="input-pair">
+
+    <div class="input-pair">
     <label for="hasRegno">Missing Registration No:</label>
     <input type="number" id="hasRegno">
     <label for="regnoActive">Active:</label>
@@ -499,6 +525,7 @@
 
     const approved2025 = +document.getElementById('approved2025').value;
     const approved2024 = +document.getElementById('approved2024').value;
+    const exclusive2024 = +document.getElementById('exclusive2024').value;
     const completedTotal = approved2025 + approved2024;
     const repairTotal = approved2025 + approved2024 + approvedActive;
     const allTotal = completed2025 + exclusive2024 + activeRepairs;
@@ -666,6 +693,7 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
 
 
 
