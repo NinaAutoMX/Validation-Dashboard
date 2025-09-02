@@ -463,13 +463,14 @@
 </div>
 
 <script>
-  function flagIfLow(value, total, label) {
+function flagIfLow(value, total, label) {
   const ratio = total > 0 ? value / total : 0;
   const formatted = `${value}/${total} ${label}`;
-  return ratio <= 0.05
+  return ratio >= 0.05
     ? `<span style="color: #c0392b; font-weight: bold;">${formatted}</span>`
     : formatted;
 }
+
   function generateReport() {
   
     const today              = new Date().toLocaleDateString("en-ZA");
@@ -706,5 +707,6 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
 
 
