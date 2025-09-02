@@ -3,532 +3,434 @@
 <head>
   <meta charset="UTF-8">
   <title>Repair Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/png" href="https://copilot.microsoft.com/th/id/BCO.5f34131a-d4f6-472e-94d0-cdd1c38d89f0.png">
   <style>
-body {
-  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-  color: #1a1a1a;
-  background: url('https://wallpapercave.com/wp/wp11509738.jpg') center/cover fixed;
-  max-width: 1200px;
-  margin: auto;
-  padding: 30px;
-}
+    /* Base styling */
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      color: #1a1a1a;
+      background: url('https://wallpapercave.com/wp/wp11509738.jpg') center/cover fixed;
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px;
+    }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-color: rgba(255,255,255,0.1);
-  z-index: -1;
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-color: rgba(255,255,255,0.1);
+      z-index: -1;
+    }
 
-.section {
-  background-color: rgba(255,255,255,0.85);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-bottom: 40px;
-}
+    .section {
+      background-color: rgba(255,255,255,0.85);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
 
-h2, h3 {
-  color: #4e125f;
-  text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-  margin-bottom: 20px;
-}
+    h2, h3 {
+      color: #4e125f;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
 
-.section-title {
-  font-size: 1.1em;
-  font-weight: 600;
-  color: #4e125f;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
+    .section-title {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #4e125f;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
 
-/* ——— Simplified Input Layout ——— */
+    .input-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
 
-.input-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-bottom: 30px;
-}
+    .input-group {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 10px 14px;
+      align-items: center;
+    }
 
-/* Single fields */
-.input-group {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 10px 14px;
-  align-items: center;
-}
-.input-group label {
-  font-weight: 600;
-}
-.input-group input,
-.input-group textarea {
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
+    .input-pair {
+      display: grid;
+      grid-template-columns: 160px 1fr 160px 1fr;
+      gap: 10px 14px;
+      align-items: center;
+    }
 
-/* Paired fields */
-.input-pair {
-  display: grid;
-  grid-template-columns: 160px 1fr 160px 1fr;
-  gap: 10px 14px;
-  align-items: center;
-}
-.input-pair label {
-  font-weight: 600;
-}
-.input-pair input {
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
+    .input-full {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
 
-/* Full-width rows */
-.input-full {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      align-items: center;
+    }
 
-/* Checkbox styling */
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  align-items: center;
-}
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  font-size: 0.9em;
-}
-.checkbox-group input {
-  margin-right: 0.4em;
-}
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      font-size: 0.9em;
+    }
 
-/* Inputs and textareas */
-input, textarea {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: rgba(255,255,255,0.85);
-  transition: border-color 0.2s ease;
-}
-input:hover,
-textarea:hover {
-  border-color: #6a1a7f;
-}
+    .checkbox-group input {
+      margin-right: 0.4em;
+    }
 
-textarea {
-  min-height: 80px;
-  resize: both;
-  width: 100%;
-  box-sizing: border-box;
-}
+    input, textarea {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: rgba(255,255,255,0.85);
+      transition: border-color 0.2s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
 
-/* Disclaimer layout */
-.disclaimer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 30px;
-}
+    input:hover, textarea:hover {
+      border-color: #6a1a7f;
+    }
 
-fieldset {
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  padding: 12px;
-  background-color: rgba(255,255,255,0.85);
-}
+    textarea {
+      min-height: 80px;
+      resize: both;
+    }
 
-legend {
-  font-weight: 600;
-  color: #6a1a7f;
-  padding: 0 6px;
-}
+    .disclaimer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
 
-/* Button styling */
-button {
-  background-color: #6a1a7f;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 24px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 30px auto 0;
-  display: block;
-}
-button:hover {
-  background-color: #4e125f;
-}
+    fieldset {
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      padding: 12px;
+      background-color: rgba(255,255,255,0.85);
+    }
 
-/* Output styling */
-#output {
-  background-color: rgba(255,255,255,0.95);
-  border: 1px solid #ccc;
-  border-left: 4px solid #6a1a7f;
-  padding: 20px;
-  font-size: 15px;
-  line-height: 1.6;
-  margin-top: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+    legend {
+      font-weight: 600;
+      color: #6a1a7f;
+      padding: 0 6px;
+    }
 
-#reportText {
-  white-space: pre-wrap;
-  word-break: break-word;
-}
+    button {
+      background-color: #6a1a7f;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 24px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 30px auto 0;
+      display: block;
+    }
 
-.section-divider {
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
-}
+    button:hover {
+      background-color: #4e125f;
+    }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .input-pair,
-  .input-full,
-  .input-group {
-    grid-template-columns: 1fr;
-  }
-  .checkbox-group {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
+    #output {
+      background-color: rgba(255,255,255,0.95);
+      border: 1px solid #ccc;
+      border-left: 4px solid #6a1a7f;
+      padding: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-top: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    #reportText {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .section-divider {
+      border-top: 1px solid #ccc;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .input-pair,
+      .input-full,
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+      .checkbox-group {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="section">
-  <h2>
-  <img src="assets/dashboard-icon.png" alt="Dashboard Icon"
-       style="height: 24px; vertical-align: middle; margin-right: 8px;">
-  Repair Dashboard
-</h2>
-<p id="current-date" style="font-weight: 500; margin-bottom: 10px;"></p>
-  <div class="input-grid">
+  <div class="section">
+    <h2>
+      <img src="assets/dashboard-icon.png" alt="Dashboard Icon"
+           style="height: 24px; vertical-align: middle; margin-right: 8px;">
+      Repair Dashboard
+    </h2>
+    <p id="current-date" style="font-weight: 500; margin-bottom: 10px;"></p>
 
-<!-- Singles with Approved Brand Subfields -->
-    <div class="input-full">
-  <div class="input-group">
-    <label>
-      <input type="checkbox" id="dataSubmittedCheck"> Data Last Submitted:
-    </label>
-    <input type="text" id="dataSubmittedText" placeholder="e.g. 02/09/2025" style="margin-left: 10px;">
-  </div>
-</div>
-
-<div class="input-full">
-  <div class="input-group">
-    <label for="activeRepairs">Active Repairs:</label>
-    <input type="number" id="activeRepairs">
-  </div>
-  <div class="input-group" style="margin-left: 20px;">
-    <label for="approvedActive">➡️ Approved Brand – Active:</label>
-    <input type="number" id="approvedActive" placeholder="e.g. 12">
-  </div>
-</div>
-
-<div class="input-full">
-  <div class="input-group">
-    <label for="completed2025">Completed Repairs 2025:</label>
-    <input type="number" id="completed2025">
-  </div>
-  <div class="input-group" style="margin-left: 20px;">
-    <label for="approved2025">➡️ Approved Brand – 2025:</label>
-    <input type="number" id="approved2025" placeholder="e.g. 45">
-  </div>
-</div>
-
-<div class="input-full">
-  <div class="input-group">
-    <label for="completed2024">Completed Repairs 2024:</label>
-    <input type="number" id="completed2024">
-  </div>
-  <div class="input-group" style="margin-left: 20px;">
-    <label for="approved2024">➡️ Approved Brand – 2024:</label>
-    <input type="number" id="approved2024" placeholder="e.g. 30">
-  </div>
-  <div class="input-group" style="margin-left: 20px;">
-    <label for="exclusive2024">➡️ 2024 Repairs (Excl. Earlier):</label>
-    <input type="number" id="exclusive2024" placeholder="e.g. 18">
-  </div>
-</div>
-
-    <div class="input-group">
-      <label for="completed2023">Completed Repairs 2023:</label>
-      <input type="number" id="completed2023">
-    </div>
-    <div class="input-group">
-      <label for="completed2022">Completed Repairs 2022:</label>
-      <input type="number" id="completed2022">
-    </div>
-<label>
-  Write-offs (total)
-  <input type="number" id="writeOffs" value="0" min="0" />
-</label>
-<label>
-  PP 2025
-  <input type="number" id="pp2025" value="0" min="0" />
-</label>
-
-<label>
-  PP 2024
-  <input type="number" id="pp2024" value="0" min="0" />
-</label>
-<label>
-  TSP
-  <input type="number" id="tsp" placeholder="e.g. 1234567.89" min="0" />
-</label>
-<label>
-  Invalid jobs
-  <input type="number" id="invalidJobs" value="0" min="0" />
-</label>
-
-<div class="input-full">
-  <div class="input-group">
-    <label for="openLong">Open >100 Days:</label>
-    <input type="number" id="openLong" placeholder="e.g. 186">
-  </div>
-  <div class="input-group" style="margin-left: 20px;">
-    <label for="openLongApproved">➡️ Approved Brand – Open >100 Days:</label>
-    <input type="number" id="openLongApproved" placeholder="e.g. 20">
-  </div>
-</div>
-
-
-<div class="input-full">
-  <label>Aggregate Data Submission Flags:</label>
-  <div class="checkbox-group">
-    <!-- 1. Aggregate Make -->
-    <label><input type="checkbox" id="chkAggregateMake"> Submitting aggregate data</label>
-    <div class="checkbox-group" style="margin-left: 20px;">
-      <label><input type="checkbox" name="aggregateMakeOption" value="Including"> Including</label>
-      <label><input type="checkbox" name="aggregateMakeOption" value="Excluding"> Excluding</label>
-    </div>
-
-    <!-- 2. Full Brand Data -->
-    <label><input type="checkbox" id="chkFullBrandData"> Submitting full data for approved brands</label>
-
-<!-- 3. Aggregate Text -->
-<label><input type="checkbox" id="chkAggregateText"> Receiving aggregate data for some repairs</label>
-<div class="input-group" style="margin-left: 20px;">
-  <label for="aggregateTextBrands">➡️ Brands receiving aggregate data:</label>
-  <input type="text" id="aggregateTextBrands" placeholder="e.g. Ford, Hyundai, Mahindra">
-</div>
-
-<!-- 3.1 Insurer Text -->    
-<label><input type="checkbox" id="chkInsurerName"> Not submiting Insurer Name</label>
-<div class="input-group" style="margin-left: 20px;">
-
-    <!-- Paired rows: Missing + Active -->
-    <div class="input-pair">
-      <label for="missstart">Missing Job Start Date:</label>
-      <input type="number" id="missstart" placeholder="e.g. 10">
-      <label for="missStartActive">Active:</label>
-      <input type="number" id="missStartActive" placeholder="e.g. 1">
-    </div>
-
-    <div class="input-pair">
-      <label for="compldatemiss">Missing Job Completion Date:</label>
-      <input type="number" id="compldatemiss" placeholder="e.g. 5">
-      <label for="complDateActive">Active:</label>
-      <input type="number" id="complDateActive" placeholder="e.g. 2">
-    </div>
-
-    <div class="input-pair">
-      <label for="make">Missing Make:</label>
-      <input type="number" id="make" placeholder="e.g. 7">
-      <label for="makeActive">Active:</label>
-      <input type="number" id="makeActive" placeholder="e.g. 4">
-    </div>
-
-    <div class="input-full">
-      <label for="validModel">Missing Valid Model:</label>
-      <input type="number" id="validModel" placeholder="e.g. 6">
+    <!-- Section: Repair Totals -->
+    <h3 class="section-title">Repair Totals</h3>
+    <div class="input-grid">
+      <div class="input-pair">
+        <label for="activeRepairs">Active Repairs:</label>
+        <input type="number" id="activeRepairs">
+        <label for="approvedActive">Approved Brand – Active:</label>
+        <input type="number" id="approvedActive">
+      </div>
+      <div class="input-pair">
+        <label for="completed2025">Completed Repairs 2025:</label>
+        <input type="number" id="completed2025">
+        <label for="approved2025">Approved Brand – 2025:</label>
+        <input type="number" id="approved2025">
+      </div>
+      <div class="input-pair">
+        <label for="completed2024">Completed Repairs 2024:</label>
+        <input type="number" id="completed2024">
+        <label for="approved2024">Approved Brand – 2024:</label>
+        <input type="number" id="approved2024">
+      </div>
+      <div class="input-group">
+        <label for="exclusive2024">2024 Repairs (Excl. Earlier):</label>
+        <input type="number" id="exclusive2024">
+      </div>
+      <div class="input-pair">
+        <label for="completed2023">Completed Repairs 2023:</label>
+        <input type="number" id="completed2023">
+        <label for="completed2022">Completed Repairs 2022:</label>
+        <input type="number" id="completed2022">
+      </div>
+      <div class="input-pair">
+        <label for="writeOffs">Write-offs (total):</label>
+        <input type="number" id="writeOffs">
+        <label for="writeOffsUnder40k">Write-offs < R40 000:</label>
+        <input type="number" id="writeOffsUnder40k">
+      </div>
+      <div class="input-pair">
+        <label for="pp2025">PP 2025:</label>
+        <input type="number" id="pp2025">
+        <label for="pp2024">PP 2024:</label>
+        <input type="number" id="pp2024">
+      </div>
+      <div class="input-pair">
+        <label for="tsp">TSP:</label>
+        <input type="number" id="tsp" placeholder="e.g. 1234567.89">
+        <label for="invalidJobs">Invalid Jobs:</label>
+        <input type="number" id="invalidJobs">
+      </div>
+        </div>
+    <!-- Section: Aggregate Flags -->
+    <h3 class="section-title">Aggregate Data Submission</h3>
+    <div class="input-grid">
       <div class="checkbox-group">
-        <label><input type="checkbox" name="validModels" value="Chery Tiggo"> Chery Tiggo</label>
-        <label><input type="checkbox" name="validModels" value="Chery Omoda"> Chery Omoda</label>
-        <label><input type="checkbox" name="validModels" value="GWM Steed"> GWM Steed</label>
-        <label><input type="checkbox" name="validModels" value="Mahindra Scorpio"> Mahindra Scorpio</label>
-        <label><input type="checkbox" name="validModels" value="Mahindra XUV"> Mahindra XUV</label>
+        <label><input type="checkbox" id="chkAggregateMake"> Submitting aggregate data</label>
+        <label><input type="checkbox" name="aggregateMakeOption" value="Including"> Including</label>
+        <label
+     <label><input type="checkbox" name="aggregateMakeOption" value="Excluding"> Excluding</label>
+        <label><input type="checkbox" id="chkFullBrandData"> Submitting full data for approved brands</label>
+        <label><input type="checkbox" id="chkAggregateText"> Receiving aggregate data for some repairs</label>
+        <label><input type="checkbox" id="chkInsurerName"> Not submitting Insurer Name</label>
+      </div>
+      <div class="input-group">
+        <label for="aggregateTextBrands">Brands receiving aggregate data:</label>
+        <input type="text" id="aggregateTextBrands" placeholder="e.g. Ford, Hyundai, Mahindra">
       </div>
     </div>
 
-    <div class="input-pair">
-      <label for="hasRegno">Missing Registration No:</label>
-      <input type="number" id="hasRegno" placeholder="e.g. 8">
-      <label for="regnoActive">Active:</label>
-      <input type="number" id="regnoActive" placeholder="e.g. 5">
-    </div>
-
-    <div class="input-pair">
-      <label for="missingVIN">Missing VIN:</label>
-      <input type="number" id="missingVIN" placeholder="e.g. 9">
-      <label for="vinActive">Active:</label>
-      <input type="number" id="vinActive" placeholder="e.g. 6">
-    </div>
-
-    <div class="input-pair">
-      <label for="missReg">Missing Year of Registration:</label>
-      <input type="number" id="missReg" placeholder="e.g. 10">
-      <label for="missRegActive">Active:</label>
-      <input type="number" id="missRegActive" placeholder="e.g. 1">
-    </div>
-
-    <!-- This one is a separate metric, so keep as single -->
-    <div class="input-group">
-      <label for="missRegUnknownWarranty">Unknown Warranty Status:</label>
-      <input type="number" id="missRegUnknownWarranty" placeholder="e.g. 8">
-    </div>
-
-    <div class="input-pair">
-      <label for="mileage">Missing Mileage:</label>
-      <input type="number" id="mileage" placeholder="e.g. 10">
-      <label for="mileageActive">Active:</label>
-      <input type="number" id="mileageActive" placeholder="e.g. 1">
-    </div>
-
-    <div class="input-pair">
-      <label for="ownerName">Missing Owner Name:</label>
-      <input type="number" id="ownerName" placeholder="e.g. 4">
-      <label for="ownerNameActive">Active:</label>
-      <input type="number" id="ownerNameActive" placeholder="e.g. 2">
-    </div>
-
-    <div class="input-pair">
-      <label for="ownerTel">Missing Owner Tel:</label>
-      <input type="number" id="ownerTel" placeholder="e.g. 5">
-      <label for="ownerTelActive">Active:</label>
-      <input type="number" id="ownerTelActive" placeholder="e.g. 3">
-    </div>
-
-    <div class="input-pair">
-      <label for="fullQuote">Missing Full Quote Details:</label>
-      <input type="number" id="fullQuote" placeholder="e.g. 6">
-      <label for="fullQuoteActive">Active:</label>
-      <input type="number" id="fullQuoteActive" placeholder="e.g. 4">
-    </div>
-
-    <!-- Part desc & supplier remain singles -->
-    <div class="input-group">
-      <label for="partDescription">Missing Part Description:</label>
-      <input type="number" id="partDescription">
-    </div>
-    <div class="input-group">
-      <label for="missingSupplier">Missing Supplier Name:</label>
-      <input type="number" id="missingSupplier">
-    </div>
-<div>
-<label for="ppSpotCheckFlagged">
-  Number of flagged repairs from PP spot-check:
-  <input type="number" id="ppSpotCheckFlagged" placeholder="e.g. 4" min="0">
-</label>
-
-<label for="pp2025JobsInput">
-  PP 2025 Job Details:
-  <textarea id="pp2025JobsInput" placeholder="e.g. PP123, , Brake pad, ABC, 0.00"></textarea>
-</label>
-</div>
-    <!-- Spot-check + flagged -->
-    <div class="input-pair">
-      <label for="spotSample">Spot-checked repairs:</label>
-      <input type="number" id="spotSample" placeholder="e.g. 10" min="1">
-      <label for="flaggedParts">Flagged:</label>
-      <input type="number" id="flaggedParts" placeholder="e.g. 3" min="0">
-    </div>
-
-    <!-- PPP single -->
-    <div class="input-group">
-      <label for="ppp">Missing Part Purchase Price:</label>
-      <input type="number" id="ppp">
-    </div>
-<label>
-  Write-offs < R40 000
-  <input type="number" id="writeOffsUnder40k" value="0" min="0" />
-</label>
-  </div>
-</div>
-
-
-    <h3>Disclaimer Forms</h3>
-    <div class="disclaimer-grid">
-      <fieldset>
-  <legend>Ford 08/11/2024</legend>
-  <label><input type="checkbox" id="fordDisclaimerCheck"> No recent In & Out of Warranty with non-OEM parts</label>
-  <textarea id="fordDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>GWM & Haval 19/08/2025</legend>
-  <label><input type="checkbox" id="gwmhavalDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="gwmhavalDisclaimer"></textarea>
-</fieldset>
-      <fieldset>
-  <legend>Honda 17/01/2025</legend>
-  <label><input type="checkbox" id="hondaDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="hondaDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>Hyundai 01/04/2025</legend>
-  <label><input type="checkbox" id="hyundaiDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="hyundaiDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>Isuzu 21/05/2025</legend>
-  <label><input type="checkbox" id="isuzuDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="isuzuDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>JAC 27/06/2025</legend>
-  <label><input type="checkbox" id="jacDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="jacDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>Mahindra 22/07/2025</legend>
-  <label><input type="checkbox" id="mahindraDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="mahindraDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>Mitsubishi 28/03/2025</legend>
-  <label><input type="checkbox" id="mitsubishiDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="mitsubishiDisclaimer"></textarea>
-  </fieldset>
-      <fieldset>
-  <legend>Suzuki 09/06/2025</legend>
-  <label><input type="checkbox" id="suzukiDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
-  <textarea id="suzukiDisclaimer"></textarea>
-  </fieldset>
-    </div>
-
-<div class="input-group">
-  <label for="additionalNotes">Additional Notes:</label>
-  <textarea id="additionalNotes" placeholder="Any extra context or observations..."></textarea>
-</div>
-
+    <!-- Section: Missing Field Summary -->
+<h3 class="section-title">Missing Field Summary</h3>
+<div class="input-grid">
   <div class="input-full">
-  <label style="margin-right: 10px;">Created By:</label>
-  <label style="margin-right: 15px;">
-    <input type="checkbox" name="creator" value="NH" onclick="toggleExclusive(this)"> (NH)
-  </label>
-  <label>
-    <input type="checkbox" name="creator" value="JW" onclick="toggleExclusive(this)"> (JW)
-  </label>
+    <div class="input-group">
+      <label for="validModel">Missing Valid Model:</label>
+      <input type="number" id="validModel">
+    </div>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="validModels" value="Chery Tiggo"> Chery Tiggo</label>
+      <label><input type="checkbox" name="validModels" value="Chery Omoda"> Chery Omoda</label>
+      <label><input type="checkbox" name="validModels" value="GWM Steed"> GWM Steed</label>
+      <label><input type="checkbox" name="validModels" value="Mahindra Scorpio"> Mahindra Scorpio</label>
+      <label><input type="checkbox" name="validModels" value="Mahindra XUV"> Mahindra XUV</label>
+    </div>
+  </div>
+
+  <div class="input-pair">
+    <label for="hasRegno">Missing Registration No:</label>
+    <input type="number" id="hasRegno">
+    <label for="regnoActive">Active:</label>
+    <input type="number" id="regnoActive">
+  </div>
+
+  <div class="input-pair">
+    <label for="missingVIN">Missing VIN:</label>
+    <input type="number" id="missingVIN">
+    <label for="vinActive">Active:</label>
+    <input type="number" id="vinActive">
+  </div>
+
+  <div class="input-pair">
+    <label for="missReg">Missing Year of Registration:</label>
+    <input type="number" id="missReg">
+    <label for="missRegActive">Active:</label>
+    <input type="number" id="missRegActive">
+  </div>
+
+  <div class="input-group">
+    <label for="missRegUnknownWarranty">Unknown Warranty Status:</label>
+    <input type="number" id="missRegUnknownWarranty">
+  </div>
+
+  <div class="input-pair">
+    <label for="mileage">Missing Mileage:</label>
+    <input type="number" id="mileage">
+    <label for="mileageActive">Active:</label>
+    <input type="number" id="mileageActive">
+  </div>
+
+  <div class="input-pair">
+    <label for="ownerName">Missing Owner Name:</label>
+    <input type="number" id="ownerName">
+    <label for="ownerNameActive">Active:</label>
+    <input type="number" id="ownerNameActive">
+  </div>
+
+  <div class="input-pair">
+    <label for="ownerTel">Missing Owner Tel:</label>
+    <input type="number" id="ownerTel">
+    <label for="ownerTelActive">Active:</label>
+    <input type="number" id="ownerTelActive">
+  </div>
+
+  <div class="input-pair">
+    <label for="fullQuote">Missing Full Quote Details:</label>
+    <input type="number" id="fullQuote">
+    <label for="fullQuoteActive">Active:</label>
+    <input type="number" id="fullQuoteActive">
+  </div>
+
+  <div class="input-group">
+    <label for="partDescription">Missing Part Description:</label>
+    <input type="number" id="partDescription">
+  </div>
+
+  <div class="input-group">
+    <label for="missingSupplier">Missing Supplier Name:</label>
+    <input type="number" id="missingSupplier">
+  </div>
+
+  <div class="input-pair">
+    <label for="spotSample">Spot-checked repairs:</label>
+    <input type="number" id="spotSample">
+    <label for="flaggedParts">Flagged:</label>
+    <input type="number" id="flaggedParts">
+  </div>
+
+  <div class="input-group">
+    <label for="ppp">Missing Part Purchase Price:</label>
+    <input type="number" id="ppp">
+  </div>
+
+  <div class="input-group">
+    <label for="ppSpotCheckFlagged">Flagged repairs from PP spot-check:</label>
+    <input type="number" id="ppSpotCheckFlagged">
+  </div>
+
+  <div class="input-group">
+    <label for="pp2025JobsInput">PP 2025 Job Details:</label>
+    <textarea id="pp2025JobsInput" placeholder="e.g. PP123 - Brake pad - 01/01/2025"></textarea>
+  </div>
 </div>
 
-    <button onclick="generateReport()">Generate Report</button>
-  </div>
+<!-- Section: Disclaimers -->
+<h3 class="section-title">Disclaimer Forms</h3>
+<div class="disclaimer-grid">
+  <fieldset>
+    <legend>Ford 08/11/2024</legend>
+    <label><input type="checkbox" id="fordDisclaimerCheck"> No recent In & Out of Warranty with non-OEM parts</label>
+    <textarea id="fordDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>GWM & Haval 19/08/2025</legend>
+    <label><input type="checkbox" id="gwmhavalDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="gwmhavalDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>Honda 17/01/2025</legend>
+    <label><input type="checkbox" id="hondaDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="hondaDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>Hyundai 01/04/2025</legend>
+    <label><input type="checkbox" id="hyundaiDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="hyundaiDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>Isuzu 21/05/2025</legend>
+    <label><input type="checkbox" id="isuzuDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="isuzuDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>JAC 27/06/2025</legend>
+    <label><input type="checkbox" id="jacDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="jacDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>Mahindra 22/07/2025</legend>
+    <label><input type="checkbox" id="mahindraDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="mahindraDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>Mitsubishi 28/03/2025</legend>
+    <label><input type="checkbox" id="mitsubishiDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="mitsubishiDisclaimer"></textarea>
+  </fieldset>
+  <fieldset>
+    <legend>Suzuki 09/06/2025</legend>
+    <label><input type="checkbox" id="suzukiDisclaimerCheck"> No recent In-Warranty with non-OEM parts</label>
+    <textarea id="suzukiDisclaimer"></textarea>
+  </fieldset>
+</div>
 
-  <div id="output">
-    <div id="reportText"></div>
+<!-- Section: Notes & Creator -->
+<h3 class="section-title">Final Notes</h3>
+<div class="input-grid">
+  <div class="input-group">
+    <label for="additionalNotes">Additional Notes:</label>
+    <textarea id="additionalNotes" placeholder="Any extra context or observations..."></textarea>
   </div>
+  <div class="checkbox-group">
+    <label>Created By:</label>
+    <label><input type="checkbox" name="creator" value="NH" onclick="toggleExclusive(this)"> (NH)</label>
+    <label><input type="checkbox" name="creator" value="JW" onclick="toggleExclusive(this)"> (JW)</label>
+  </div>
+</div>
+
+<button onclick="generateReport()">Generate Report</button>
+
+<div id="output">
+  <div id="reportText"></div>
+</div>
 
 <script>
   function flagIfLow(value, total, label) {
@@ -764,6 +666,7 @@ document.getElementById('reportText').innerHTML = html;
 
 </body>
 </html>
+
 
 
 
