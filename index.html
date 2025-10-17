@@ -565,7 +565,7 @@
             <input type="number" id="missingSupplier">
           </div>
           <div class="input-pair">
-            <label for="spotSample">Spot-checked repairs:</label>
+            <label for="c">Spot-checked repairs:</label>
             <input type="number" id="spotSample">
             <label for="flaggedParts">Flagged:</label>
             <input type="number" id="flaggedParts">
@@ -968,11 +968,11 @@
 
       const totalPartFlags = partDescription + missingSupplier;
       if (spotSample > 0) {
-        const proportion = spotSample / flaggedParts;
+        const proportion = flaggedParts / spotSample;
         let estimateFlagged = Math.round(proportion * totalPartFlags);
         estimateFlagged = Math.min(estimateFlagged, totalPartFlags);
 
-        let spotCheckText = `I spot-checked ${spotSample}/${totalPartFlags} `;
+        let spotCheckText = `I spot-checked ${totalPartFlags}/${spotSample}`;
         
         if (totalPartFlags === spotSample) {
           spotCheckText += '<span style="color: var(--danger); font-weight: bold;">all have been flagged.</span>';
@@ -1073,5 +1073,6 @@ if (disclaimerTexts.length) {
 
 </body>
 </html>
+
 
 
