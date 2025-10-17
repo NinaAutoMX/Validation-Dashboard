@@ -972,14 +972,14 @@
         let estimateFlagged = Math.round(proportion * totalPartFlags);
         estimateFlagged = Math.min(estimateFlagged, totalPartFlags);
 
-        let spotCheckText = `I spot-checked ${flaggedParts}/${spotSample}`;
+        let spotCheckText = `I spot-checked ${spotSample}`;
         
         if (flaggedParts === spotSample) {
-          spotCheckText += '<span style="color: var(--danger); font-weight: bold;">all have been flagged.</span>';
+          spotCheckText += '<span style="color: var(--danger); font-weight: bold;"> repairs, all have been flagged.</span>';
         } else {
           const ratio = estimateFlagged / totalPartFlags;
           const likelyText = ratio >= 0.05 
-            ? `<span style="color: var(--danger); font-weight: bold;">therefore it is likely that ${estimateFlagged}/${totalPartFlags} are flagged for parts.</span>`
+            ? `<span style="color: var(--danger); font-weight: bold;"> repairs ${flaggedParts}/${spotSample} were flagged, therefore it is likely that ${estimateFlagged}/${totalPartFlags} are flagged for parts.</span>`
             : `therefore it is likely that ${estimateFlagged}/${totalPartFlags} are flagged for parts.`;
           spotCheckText += likelyText;
         }
@@ -1073,6 +1073,7 @@ if (disclaimerTexts.length) {
 
 </body>
 </html>
+
 
 
 
