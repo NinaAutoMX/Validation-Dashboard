@@ -968,11 +968,11 @@
 
       const totalPartFlags = partDescription + missingSupplier;
       if (spotSample > 0) {
-        const proportion = flaggedParts / spotSample;
+        const proportion = spotSample / flaggedParts;
         let estimateFlagged = Math.round(proportion * totalPartFlags);
         estimateFlagged = Math.min(estimateFlagged, totalPartFlags);
 
-        let spotCheckText = `I spot-checked ${totalPartFlags}/${spotSample} `;
+        let spotCheckText = `I spot-checked ${spotSample}/${totalPartFlags} `;
         
         if (totalPartFlags === spotSample) {
           spotCheckText += '<span style="color: var(--danger); font-weight: bold;">all have been flagged.</span>';
@@ -1073,4 +1073,5 @@ if (disclaimerTexts.length) {
 
 </body>
 </html>
+
 
