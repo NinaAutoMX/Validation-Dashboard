@@ -43,7 +43,7 @@
     body {
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
       color: var(--text-primary);
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #7c3aed 100%);
       min-height: 100vh;
       padding: 20px;
       transition: all 0.3s ease;
@@ -1006,32 +1006,51 @@
       }
 
       const disclaimerBrands = [];
+const disclaimerTexts = [];
 
-      ['ford', 'gwmhaval', 'honda', 'hyundai', 'isuzu', 'jac', 'mahindra', 'mitsubishi', 'suzuki', 'stellantis'].forEach(idPrefix => {
-        const txt = document.getElementById(idPrefix + 'Disclaimer')?.value.trim();
-        const checkbox = document.getElementById(idPrefix + 'DisclaimerCheck');
-        const checked = checkbox ? checkbox.checked : false;
-        
-        let title = idPrefix;
-        if (idPrefix === 'gwmhaval') title = 'GWM & Haval';
-        else if (idPrefix === 'stellantis') title = 'Stellantis';
-        else title = idPrefix.charAt(0).toUpperCase() + idPrefix.slice(1);
+['ford', 'gwmhaval', 'honda', 'hyundai', 'isuzu', 'jac', 'mahindra', 'mitsubishi', 'suzuki', 'stellantis'].forEach(idPrefix => {
+  const txt = document.getElementById(idPrefix + 'Disclaimer')?.value.trim();
+  const checkbox = document.getElementById(idPrefix + 'DisclaimerCheck');
+  const checked = checkbox ? checkbox.checked : false;
+  
+  let title = idPrefix;
+  if (idPrefix === 'gwmhaval') title = 'GWM & Haval';
+  else if (idPrefix === 'stellantis') title = 'Stellantis';
+  else title = idPrefix.charAt(0).toUpperCase() + idPrefix.slice(1);
 
-        if (checked) {
-          disclaimerBrands.push(title);
-        }
-      });
+  if (checked) {
+    disclaimerBrands.push(title);
+  }
+  
+  if (txt) {
+    if (idPrefix === 'stellantis') {
+      disclaimerTexts.push(`Stellantis Vehicle Categorization forms: ${txt}`);
+    } else {
+      disclaimerTexts.push(`${title} Disclaimer: ${txt}`);
+    }
+  }
+});
 
-      if (disclaimerBrands.length) {
-        const brandList = disclaimerBrands.join(', ').replace(/, ([^,]*)$/, ' & $1');
-        let flagText;
-        if (disclaimerBrands.includes('Stellantis')) {
-          flagText = `There are no recent In-Warranty ${brandList.replace('Stellantis', '')} repairs where non-OEM parts were fitted and no recent Stellantis categorization forms.`.replace(', &', '');
-        } else {
-          flagText = `There are no recent In-Warranty ${brandList} repairs where non-OEM parts were fitted.`;
-        }
-        summaryParts.push(flagText);
-      }
+if (disclaimerBrands.length) {
+  const brandList = disclaimerBrands.join(', ').replace(/, ([^,]*)$/, ' & $1');
+  let flagText;
+  if (disclaimerBrands.includes('Stellantis')) {
+    const nonStellantis = disclaimerBrands.filter(b => b !== 'Stellantis');
+    if (nonStellantis.length > 0) {
+      const nonStellantisList = nonStellantis.join(', ').replace(/, ([^,]*)$/, ' & $1');
+      flagText = `There are no recent In-Warranty ${nonStellantisList} repairs where non-OEM parts were fitted and no recent Stellantis categorization forms.`;
+    } else {
+      flagText = `There are no recent Stellantis categorization forms.`;
+    }
+  } else {
+    flagText = `There are no recent In-Warranty ${brandList} repairs where non-OEM parts were fitted.`;
+  }
+  summaryParts.push(flagText);
+}
+
+if (disclaimerTexts.length) {
+  summaryParts.push(disclaimerTexts.join(' '));
+}
 
       const additionalNotes = document.getElementById('additionalNotes')?.value.trim();
       const creator = document.querySelector('input[name="creator"]:checked')?.value || '';
@@ -1054,3 +1073,4 @@
 
 </body>
 </html>
+
