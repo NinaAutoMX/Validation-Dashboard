@@ -972,9 +972,9 @@
         let estimateFlagged = Math.round(proportion * totalPartFlags);
         estimateFlagged = Math.min(estimateFlagged, totalPartFlags);
 
-        let spotCheckText = `I spot-checked ${totalPartFlags}/${spotSample}`;
+        let spotCheckText = `I spot-checked ${flaggedParts}/${spotSample}`;
         
-        if (totalPartFlags === spotSample) {
+        if (flaggedParts === spotSample) {
           spotCheckText += '<span style="color: var(--danger); font-weight: bold;">all have been flagged.</span>';
         } else {
           const ratio = estimateFlagged / totalPartFlags;
@@ -1073,6 +1073,7 @@ if (disclaimerTexts.length) {
 
 </body>
 </html>
+
 
 
 
